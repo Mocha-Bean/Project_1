@@ -5,6 +5,9 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float speed;
+    private int lives = 3;
+    private int health = 2; // Mario can take two hits before he dies
+    private Vector3 respawnPosition = new Vector3(-1.855f, 1.148f, 0);
 
     //Jumping
     public Rigidbody2D thisRigidBody;
@@ -31,6 +34,14 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if(health <= 0)
+        {
+            //Respawn mario at the beginning of the level
+            this.transform.position = respawnPosition;
+            health = 2;
+        }
+
         //Get left or right arrow key input
         bool isPushingLeft = Input.GetKey(KeyCode.A);
         bool isPushingRight = Input.GetKey(KeyCode.D);
@@ -82,15 +93,27 @@ public class Player : MonoBehaviour
 
         //Check if other object is the ground
         bool isGround = otherGameObject.tag == "Ground";
+        bool isLife = otherGameObject.tag == "OneUp";
 
         //If so, restore ability of object to jump
         if (isGround)
             jumpIsAvailable = true;
+
+        if (isLife)
+        {
+            lives++;
+            Destroy(otherGameObject);
+        }
     }
 
     //
     // Utility Functions:
     //
+
+    public int getLives()
+    {
+        return lives;
+    }
 
     void Jump()
     {
