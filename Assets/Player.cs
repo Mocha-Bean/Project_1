@@ -25,6 +25,8 @@ public class Player : MonoBehaviour
     public Vector3 location;
     private bool BigMario = false;
     public DeathScreen youdied;
+    public SpawnOneUp shroomspawn;
+    public Animator animator;
 
     //------------------------
     // Functions
@@ -80,21 +82,24 @@ public class Player : MonoBehaviour
             newPosition += Vector3.left * speed;
             this.facing = Facing.right;
             MovingStatus = true;
+            animator.SetBool("moving", true);
         }
         else if (isPushingRight)
         {
             newPosition += Vector3.right * speed;
             this.facing = Facing.left;
             MovingStatus = true;
+            animator.SetBool("moving", true);
         } else
         {
             MovingStatus = false;
+            animator.SetBool("moving", false);
         }
 
-        if (Input.GetKey(KeyCode.UpArrow))
+        /*if (Input.GetKey(KeyCode.UpArrow))
             newPosition += Vector3.up * speed;
         else if (Input.GetKey(KeyCode.DownArrow))
-            newPosition += Vector3.down * speed;
+            newPosition += Vector3.down * speed;*/
 
         // Update which way we are facing
         if (this.facing == Facing.left)
@@ -143,6 +148,7 @@ public class Player : MonoBehaviour
             if(health == 0)
             {
                 youdied.Trigger(); // triggers death screen
+                shroomspawn.ToggleNiceMushroom(); // switch to nice mushroom to demonstrate design change
             }
         }
     }

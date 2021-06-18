@@ -6,12 +6,15 @@ public class SpawnOneUp : MonoBehaviour
 {
 
     public GameObject oneUpPrefab;
-    public 
+    public GameObject NiceShroomPrefab;
+    public Player mario;
+    public bool NiceMushroom;
+    private NiceShroom shroom;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        NiceMushroom = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -20,8 +23,18 @@ public class SpawnOneUp : MonoBehaviour
 
         if (other.GetComponent<Player>() != null)
         {
-            var oneUp = GameObject.Instantiate(oneUpPrefab);
-            oneUp.transform.position = this.transform.position + new Vector3(0, 0.5f, 0);
+            if (!NiceMushroom)
+            {
+                var oneUp = GameObject.Instantiate(oneUpPrefab);
+                oneUp.transform.position = this.transform.position + new Vector3(0, 0.5f, 0);
+            }
+            else
+            {
+                var NiceShroom = GameObject.Instantiate(NiceShroomPrefab);
+                shroom = NiceShroom.GetComponent<NiceShroom>();
+                shroom.mario = mario;
+                NiceShroom.transform.position = this.transform.position + new Vector3(0, 0.5f, 0);
+            }
         }
     }
 
@@ -29,5 +42,11 @@ public class SpawnOneUp : MonoBehaviour
     void Update()
     {
         
+    }
+
+    // toggle between  evil mushroom and nice mushroom, to demonstrate design change
+    public void ToggleNiceMushroom()
+    {
+        NiceMushroom = !NiceMushroom;
     }
 }

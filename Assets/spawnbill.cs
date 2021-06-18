@@ -22,7 +22,7 @@ public class spawnbill : MonoBehaviour
         if (other.GetComponent<Player>() != null)
         {
             var bill = GameObject.Instantiate(bulletbill);
-            bullet = bill.GetComponent<bulletbill>();
+            bullet = bill.GetComponent<bulletbill>(); // i'm so sorry
             bullet.mario = mario;
             bill.transform.position = this.transform.position;
         }
