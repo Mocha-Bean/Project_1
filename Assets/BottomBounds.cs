@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BottomBounds : MonoBehaviour
 {
+    public Player mario;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -18,7 +20,8 @@ public class BottomBounds : MonoBehaviour
         }
         else
         {
-            collision.gameObject.transform.position = new Vector3(-1.855f, 1.148f, 0);
+            //collision.gameObject.transform.position = new Vector3(-1.855f, 1.148f, 0);
+            mario.health = 0;
         }
     }
 

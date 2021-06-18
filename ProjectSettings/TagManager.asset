@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ground
   - InteractiveTile
+  - OneUp
+  - bullet
   layers:
   - Default
   - TransparentFX

@@ -26,8 +26,8 @@ public class PlayerFollower : MonoBehaviour
         var movementVector = targetPosition - currentPosition;
 
         //EndVector = direction * length
-        movementVector = movementVector.normalized * cameraSpeed;
+        movementVector = movementVector * cameraSpeed;
 
-        this.transform.position = currentPosition + movementVector;
+        this.transform.position = currentPosition + movementVector; // actually better not to normalize the movement vector here; gives you more fluid motion + movement more closely follows player speed
     }
 }

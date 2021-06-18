@@ -5,8 +5,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float speed;
-    private int lives = 3;
-    private int health = 2; // Mario can take two hits before he dies
+    public int lives = 3;
+    public int health = 1; // Mario can take one hit before he dies
     private Vector3 respawnPosition = new Vector3(-1.855f, 1.148f, 0);
 
     //Jumping
@@ -18,7 +18,13 @@ public class Player : MonoBehaviour
 
     public enum Facing { left, right }
     public Facing facing;
+    public bool MovingStatus;
     private SpriteRenderer thisSpriteRenderer;
+
+    public Vector3 initialscale;
+    public Vector3 location;
+    private bool BigMario = false;
+    public DeathScreen youdied;
 
     //------------------------
     // Functions
@@ -29,17 +35,36 @@ public class Player : MonoBehaviour
     {
         facing = Facing.left;
         thisSpriteRenderer = this.gameObject.GetComponent<SpriteRenderer>();
+        initialscale = transform.localScale;
+        BigMario = false;
+        MovingStatus = false;
     }
-
     // Update is called once per frame
+    
     void Update()
     {
-
+        // Jump Input
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jump();
+        }
+    }
+    
+    void FixedUpdate()
+    {
         if(health <= 0)
         {
             //Respawn mario at the beginning of the level
+            transform.localScale = initialscale;
+            BigMario = false;
             this.transform.position = respawnPosition;
-            health = 2;
+            health = 1;
+        }
+
+        if(BigMario & health == 1) // did we take damage as big mario? reset size
+        {
+            transform.localScale = initialscale;
+            BigMario = false;
         }
 
         //Get left or right arrow key input
@@ -54,23 +79,22 @@ public class Player : MonoBehaviour
         {
             newPosition += Vector3.left * speed;
             this.facing = Facing.right;
+            MovingStatus = true;
         }
         else if (isPushingRight)
         {
             newPosition += Vector3.right * speed;
             this.facing = Facing.left;
+            MovingStatus = true;
+        } else
+        {
+            MovingStatus = false;
         }
 
         if (Input.GetKey(KeyCode.UpArrow))
             newPosition += Vector3.up * speed;
         else if (Input.GetKey(KeyCode.DownArrow))
             newPosition += Vector3.down * speed;
-
-        // Jump Input
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Jump();
-        }
 
         // Update which way we are facing
         if (this.facing == Facing.left)
@@ -83,6 +107,7 @@ public class Player : MonoBehaviour
         }
 
         this.gameObject.transform.position = newPosition;
+        location = transform.position;
     }
 
     // AKA "A hook"
@@ -94,6 +119,7 @@ public class Player : MonoBehaviour
         //Check if other object is the ground
         bool isGround = otherGameObject.tag == "Ground";
         bool isLife = otherGameObject.tag == "OneUp";
+        bool isBullet = otherGameObject.tag == "bullet";
 
         //If so, restore ability of object to jump
         if (isGround)
@@ -101,8 +127,23 @@ public class Player : MonoBehaviour
 
         if (isLife)
         {
-            lives++;
+            if (!BigMario)
+            {
+                health++;
+                BigMario = true;
+            }
             Destroy(otherGameObject);
+            transform.localScale = transform.localScale * 1.5f;
+        }
+
+        if (isBullet)
+        {
+            health--;
+            Destroy(otherGameObject);
+            if(health == 0)
+            {
+                youdied.Trigger(); // triggers death screen
+            }
         }
     }
 

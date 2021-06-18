@@ -13,7 +13,7 @@ public class OneUpScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
 
         //1up sprite moves right
