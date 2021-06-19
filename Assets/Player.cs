@@ -148,7 +148,10 @@ public class Player : MonoBehaviour
             if(health == 0)
             {
                 youdied.Trigger(); // triggers death screen
-                shroomspawn.ToggleNiceMushroom(); // switch to nice mushroom to demonstrate design change
+                if (shroomspawn.NiceMushroom == false)
+                {
+                    shroomspawn.ToggleNiceMushroom(); // switch to nice mushroom to demonstrate design change
+                }
             }
         }
     }
